@@ -27,5 +27,5 @@ setuptools.setup(
     ],
     keywords="scrapingant api scraper scraping",
     python_requires='~=3.5',
-    install_requires=['requests~=2.*'],
+    install_requires=['requests>=2,<3'],
 )
