@@ -1,11 +1,9 @@
 init:
-	poetry update
+	pip3 install -e .[dev]
+
 test:
-	poetry run pytest -p no:cacheprovider
+	pytest -p no:cacheprovider
 
-flake8:
-	poetry run flake8 --max-line-length=120 scrapingant_client_python tests
+lint:
+	flake8 --max-line-length=120 scrapingant_client tests
 
-publish:
-	poetry build
-	poetry publish

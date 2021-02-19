@@ -1,6 +1,6 @@
 from typing import List
 
-from src.cookie import Cookie
+from scrapingant_client.cookie import Cookie
 
 
 class Response:

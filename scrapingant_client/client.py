@@ -4,10 +4,10 @@ from typing import List, Optional
 
 import requests
 
-from src.constants import ProxyCountry
-from src.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
-from src.response import Response
-from src.utils import base64_encode_string
+from scrapingant_client.constants import ProxyCountry
+from scrapingant_client.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
+from scrapingant_client.response import Response
+from scrapingant_client.utils import base64_encode_string
 
 
 class ScrapingAntClient:

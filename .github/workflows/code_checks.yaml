@@ -1,0 +1,20 @@
+name: Code checks
+
+on: push
+
+jobs:
+  code_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Init
+        run: make init
+      - name: Lint
+        run: make lint
+      - name: Tests
+        run: make test

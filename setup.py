@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="scrapingant-client-python",
+    name="scrapingant-client",
     version="0.1.1",
     author="andrii.kovalenko",
     author_email="adrekoval@gmail.com",
@@ -28,4 +28,10 @@ setuptools.setup(
     keywords="scrapingant api scraper scraping",
     python_requires='~=3.5',
     install_requires=['requests>=2,<3'],
+    extras_require={
+        'dev': [
+            'pytest>=6,<7',
+            'flake8>=3,<4',
+        ]
+    }
 )
