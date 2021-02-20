@@ -1,4 +1,5 @@
-from scrapingant_client.cookie import cookies_list_to_string, Cookie, cookies_list_from_string
+from scrapingant_client import Cookie
+from scrapingant_client.cookie import cookies_list_to_string, cookies_list_from_string
 
 
 def test_cookies_list_to_string_empty():
