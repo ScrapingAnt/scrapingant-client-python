@@ -4,7 +4,7 @@ from typing import List, Optional
 
 import requests
 
-from scrapingant_client.constants import ProxyCountry, SCRAPINGANT_API_BASE_URL
+from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 from scrapingant_client.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
 from scrapingant_client.errors import (
     ScrapingantInvalidTokenException,
@@ -30,7 +30,7 @@ class ScrapingAntClient:
             url: str,
             cookies: Optional[List[Cookie]] = None,
             js_snippet: Optional[str] = None,
-            proxy_country: Optional[ProxyCountry] = None,
+            proxy_country: Optional[str] = None,
             return_text: bool = False,
     ) -> Response:
         request_data = {'url': url}
@@ -39,7 +39,7 @@ class ScrapingAntClient:
         if js_snippet is not None:
             encoded_js_snippet = base64_encode_string(js_snippet)
             request_data['js_snippet'] = encoded_js_snippet
-        if proxy_country:
+        if proxy_country is not None:
             request_data['proxy_country'] = proxy_country.lower()
         if return_text:
             request_data['return_text'] = True
