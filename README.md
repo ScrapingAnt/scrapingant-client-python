@@ -1,6 +1,9 @@
 # ScrapingAnt API client for Python
+[![PyPI version](https://badge.fury.io/py/scrapingant-client.svg)](https://badge.fury.io/py/scrapingant-client)
+
 `scrapingant-client` is the official library to access [ScrapingAnt API](https://docs.scrapingant.com) from your
-Python applications. It  provides useful features like parameters encoding to improve the ScrapingAnt usage experience.
+Python applications. It  provides useful features like parameters encoding to improve the ScrapingAnt usage experience. 
+Requires python 3.6+.
 
 <!-- toc -->
 
@@ -9,6 +12,7 @@ Python applications. It  provides useful features like parameters encoding to im
 - [API Reference](#api-reference)
 - [Exceptions](#exceptions)
 - [Examples](#examples)
+- [Useful links](#useful-links)
 
 <!-- tocstop -->
 
@@ -28,9 +32,7 @@ In order to get API token you'll need to register at [ScrapingAnt Service](https
 ## API Reference
 All public classes, methods and their parameters can be inspected in this API reference.
 
-<a name="ScrapingAntClient"></a>
-
-#### [](#ScrapingAntClient) ScrapingAntClient(token)
+#### ScrapingAntClient(token)
 
 Main class of this library. 
 
@@ -40,7 +42,7 @@ Main class of this library.
 
 * * *
 
-#### [](#ScrapingAntClient+general_request) `ScrapingAntClient.general_request(url, cookies, js_snippet, proxy_country, return_text)` ⇒ Response
+#### ScrapingAntClient.general_request
 
 https://docs.scrapingant.com/request-response-format#available-parameters
 
@@ -49,14 +51,14 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 | url | <code>string</code> |  |
 | cookies | <code>List[Cookie]</code> | None |
 | js_snippet | <code>string</code> | None |
-| proxy_country | <code>ProxyCountry</code> | None | 
+| proxy_country | <code>str</code> | None | 
 | return_text | <code>boolean</code> | False |
 
 **IMPORTANT NOTE:** <code>js_snippet</code> will be encoded to Base64 automatically by the ScrapingAnt client library.
 
 * * *
 
-#### [](#Cookie) Cookie
+#### Cookie
 Class defining cookie. Curently supports only name and value
 
 | Param | Type | 
@@ -66,21 +68,15 @@ Class defining cookie. Curently supports only name and value
 
 * * *
 
-#### [](#ProxyCountry) ProxyCountry
-
-Enum containing all available proxy countries
-
-* * *
-
-#### [](#Response) Response
-Class defining cookie. Curently supports only name and value
+#### Response
+Class defining response from API. 
 
 | Param | Type |
 | --- | --- |
 | content | <code>string</code> |
 | cookies | <code>List[Cookie]</code> |
 
-## [](#exceptions) Exceptions
+## Exceptions
 
 `ScrapingantClientException` is base Exception class, used for all errors. 
 
@@ -132,3 +128,7 @@ result = client.general_request(
 )
 print(result.content)
 ```
+
+## Useful links
+- [Scrapingant Api doumentation](https://docs.scrapingant.com)
+- [Scrapingant Js Client](https://github.com/scrapingant/scrapingant-client-js)
