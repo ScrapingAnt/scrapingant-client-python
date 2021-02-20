@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="scrapingant-client",
-    version="0.2.0",
+    version="0.3.0",
     author="andrii.kovalenko",
     author_email="adrekoval@gmail.com",
     license='Apache-2.0',
