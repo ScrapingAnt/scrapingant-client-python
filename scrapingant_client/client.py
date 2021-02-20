@@ -4,8 +4,13 @@ from typing import List, Optional
 
 import requests
 
-from scrapingant_client.constants import ProxyCountry
+from scrapingant_client.constants import ProxyCountry, SCRAPINGANT_API_BASE_URL
 from scrapingant_client.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
+from scrapingant_client.errors import (
+    ScrapingantInvalidTokenException,
+    ScrapingantInvalidInputException,
+    ScrapingantInternalException,
+)
 from scrapingant_client.response import Response
 from scrapingant_client.utils import base64_encode_string
 
@@ -13,7 +18,6 @@ from scrapingant_client.utils import base64_encode_string
 class ScrapingAntClient:
     def __init__(self, token: str):
         self.token = token
-        self.scrapingant_api_base_url = 'https://api.scrapingant.com/v1'
         self.requests_session = requests.Session()
         user_agent = f'ScrapingAntClient ({sys.platform}; Python/{platform.python_version()});'
         self.requests_session.headers.update({
@@ -41,9 +45,15 @@ class ScrapingAntClient:
             request_data['return_text'] = True
 
         response = self.requests_session.post(
-            self.scrapingant_api_base_url + '/general',
+            SCRAPINGANT_API_BASE_URL + '/general',
             json=request_data,
         )
+        if response.status_code == 403:
+            raise ScrapingantInvalidTokenException()
+        elif response.status_code == 422:
+            raise ScrapingantInvalidInputException(response.text)
+        elif response.status_code == 500:
+            raise ScrapingantInternalException()
         json_response = response.json()
         content = json_response['content']
         cookies_string = json_response['cookies']

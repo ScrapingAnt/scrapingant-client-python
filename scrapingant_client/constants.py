@@ -1,5 +1,7 @@
 from enum import Enum
 
+SCRAPINGANT_API_BASE_URL = 'https://api.scrapingant.com/v1'
+
 
 class ProxyCountry(str, Enum):
     brasilia = 'br'
