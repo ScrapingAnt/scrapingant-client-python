@@ -5,8 +5,9 @@ Python applications. It  provides useful features like parameters encoding to im
 <!-- toc -->
 
 - [Quick Start](#quick-start)
-- [API key](#api-key)
+- [API token](#api-token)
 - [API Reference](#api-reference)
+- [Exceptions](#exceptions)
 - [Examples](#examples)
 
 <!-- tocstop -->
@@ -21,27 +22,25 @@ result = client.general_request('https://example.com')
 print(result.content)
 ```
 
-## API key
-In order to get API key you'll need to register at [ScrapingAnt Service](https://app.scrapingant.com)
+## API token
+In order to get API token you'll need to register at [ScrapingAnt Service](https://app.scrapingant.com)
 
 ## API Reference
 All public classes, methods and their parameters can be inspected in this API reference.
 
 <a name="ScrapingAntClient"></a>
 
-#### [](#ScrapingAntClient) `ScrapingAntClient(token)`
+#### [](#ScrapingAntClient) ScrapingAntClient(token)
 
+Main class of this library. 
 
-| Param | Type | Default |
-| --- | --- | --- |
-| token | <code>string</code> |  |
-
+| Param | Type  |
+| --- | --- |
+| token | <code>string</code> |
 
 * * *
 
-<a name="ScrapingAntClient+scrape"></a>
-
-### [](#ScrapingAntClient+scrape) `ScrapingAntClient.general_request(url, cookies, js_snippet, proxy_country, return_text)` ⇒ Response
+#### [](#ScrapingAntClient+general_request) `ScrapingAntClient.general_request(url, cookies, js_snippet, proxy_country, return_text)` ⇒ Response
 
 https://docs.scrapingant.com/request-response-format#available-parameters
 
@@ -57,7 +56,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 
 * * *
 
-### [](#Cookie) Cookie
+#### [](#Cookie) Cookie
 Class defining cookie. Curently supports only name and value
 
 | Param | Type | 
@@ -67,13 +66,13 @@ Class defining cookie. Curently supports only name and value
 
 * * *
 
-### [](#ProxyCountry) ProxyCountry
+#### [](#ProxyCountry) ProxyCountry
 
 Enum containing all available proxy countries
 
 * * *
 
-### [](#Response) Response
+#### [](#Response) Response
 Class defining cookie. Curently supports only name and value
 
 | Param | Type |
@@ -81,11 +80,15 @@ Class defining cookie. Curently supports only name and value
 | content | <code>string</code> |
 | cookies | <code>List[Cookie]</code> |
 
-* * *
+## [](#exceptions) Exceptions
 
-### [](#ScrapingantClientException) ScrapingantClientException
+`ScrapingantClientException` is base Exception class, used for all errors. 
 
-`ScrapingantClientException` is base Exception class, used for all errors.
+| Exception | Reason |
+| --- | --- |
+| ScrapingantInvalidTokenException | The API token is wrong or you have exceeded the API calls request limit 
+| ScrapingantInvalidInputException | Invalid value provided. Please, look into error message for more info |
+| ScrapingantInternalException | Something went wrong with the server side code. Try again later or contact ScrapingAnt support |
 
 * * *
 
