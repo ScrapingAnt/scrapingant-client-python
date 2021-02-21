@@ -1,12 +1,15 @@
 import os
+import pathlib
+import re
 
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-version_file = open(os.path.join('scrapingant_client', 'VERSION'))
-version = version_file.read().strip()
+HERE = pathlib.Path(__file__).parent
+txt = (HERE / "scrapingant_client" / "__init__.py").read_text("utf-8")
+version = re.findall(r'^__version__ = "([^"]+)"\r?$', txt, re.M)[0]
 
 setuptools.setup(
     name="scrapingant-client",
@@ -40,5 +43,4 @@ setuptools.setup(
             'responses>=0,<1'
         ]
     },
-    include_package_data=True,
 )
