@@ -130,5 +130,5 @@ print(result.content)
 ```
 
 ## Useful links
-- [Scrapingant Api doumentation](https://docs.scrapingant.com)
-- [Scrapingant Js Client](https://github.com/scrapingant/scrapingant-client-js)
+- [Scrapingant API doumentation](https://docs.scrapingant.com)
+- [Scrapingant JS Client](https://github.com/scrapingant/scrapingant-client-js)
