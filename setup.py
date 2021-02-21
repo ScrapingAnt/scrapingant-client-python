@@ -39,5 +39,6 @@ setuptools.setup(
             'flake8>=3,<4',
             'responses>=0,<1'
         ]
-    }
+    },
+    include_package_data=True,
 )
