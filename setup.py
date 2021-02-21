@@ -1,11 +1,16 @@
+import os
+
 import setuptools
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+version_file = open(os.path.join('scrapingant_client', 'VERSION'))
+version = version_file.read().strip()
+
 setuptools.setup(
     name="scrapingant-client",
-    version="0.3.0",
+    version=version,
     author="andrii.kovalenko",
     author_email="adrekoval@gmail.com",
     license='Apache-2.0',
