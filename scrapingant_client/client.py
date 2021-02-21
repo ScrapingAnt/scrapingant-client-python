@@ -1,10 +1,10 @@
-import os
 import platform
 import sys
 from typing import List, Optional
 
 import requests
 
+import scrapingant_client
 from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 from scrapingant_client.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
 from scrapingant_client.errors import (
@@ -20,8 +20,7 @@ class ScrapingAntClient:
     def __init__(self, token: str):
         self.token = token
         self.requests_session = requests.Session()
-        version_file = open(os.path.join('scrapingant_client', 'VERSION'))
-        version = version_file.read().strip()
+        version = scrapingant_client.__version__
         user_agent = f'ScrapingAnt Client/{version} ({sys.platform}; Python/{platform.python_version()});'
         self.requests_session.headers.update({
             'x-api-key': self.token,
