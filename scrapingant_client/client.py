@@ -1,3 +1,4 @@
+import os
 import platform
 import sys
 from typing import List, Optional
@@ -19,7 +20,9 @@ class ScrapingAntClient:
     def __init__(self, token: str):
         self.token = token
         self.requests_session = requests.Session()
-        user_agent = f'ScrapingAntClient ({sys.platform}; Python/{platform.python_version()});'
+        version_file = open(os.path.join('scrapingant_client', 'VERSION'))
+        version = version_file.read().strip()
+        user_agent = f'ScrapingAnt Client/{version} ({sys.platform}; Python/{platform.python_version()});'
         self.requests_session.headers.update({
             'x-api-key': self.token,
             'User-Agent': user_agent,
