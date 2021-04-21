@@ -85,6 +85,7 @@ Class defining response from API.
 | ScrapingantInvalidTokenException | The API token is wrong or you have exceeded the API calls request limit 
 | ScrapingantInvalidInputException | Invalid value provided. Please, look into error message for more info |
 | ScrapingantInternalException | Something went wrong with the server side code. Try again later or contact ScrapingAnt support |
+| ScrapingantSiteNotReachableException | The requested URL is not reachable. Please, check it locally |
 
 * * *
 

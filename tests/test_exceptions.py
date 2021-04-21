@@ -6,6 +6,7 @@ from scrapingant_client import (
     ScrapingantInvalidTokenException,
     ScrapingantInvalidInputException,
     ScrapingantInternalException,
+    ScrapingantSiteNotReachableException,
 )
 from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 
@@ -36,3 +37,13 @@ def test_internal_server_error():
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantInternalException):
         client.general_request('bad_url')
+
+
+@responses.activate
+def test_not_reachable():
+    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+                  json={}, status=404)
+    client = ScrapingAntClient(token='some_token')
+    with pytest.raises(ScrapingantSiteNotReachableException) as e:
+        client.general_request('example.com')
+    assert 'The requested URL is not reachable (example.com)' in str(e)

@@ -11,6 +11,7 @@ from scrapingant_client.errors import (
     ScrapingantInvalidTokenException,
     ScrapingantInvalidInputException,
     ScrapingantInternalException,
+    ScrapingantSiteNotReachableException,
 )
 from scrapingant_client.response import Response
 from scrapingant_client.utils import base64_encode_string
@@ -54,6 +55,8 @@ class ScrapingAntClient:
             raise ScrapingantInvalidTokenException()
         elif response.status_code == 422:
             raise ScrapingantInvalidInputException(response.text)
+        elif response.status_code == 404:
+            raise ScrapingantSiteNotReachableException(url)
         elif response.status_code == 500:
             raise ScrapingantInternalException()
         json_response = response.json()
