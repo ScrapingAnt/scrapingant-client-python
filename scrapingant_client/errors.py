@@ -13,6 +13,12 @@ class ScrapingantInvalidInputException(ScrapingantClientException):
     pass
 
 
+class ScrapingantSiteNotReachableException(ScrapingantClientException):
+    def __init__(self, url):
+        message = f'The requested URL is not reachable ({url})'
+        super().__init__(message)
+
+
 class ScrapingantInternalException(ScrapingantClientException):
     def __init__(self):
         message = 'Something went wrong with the server side. Please try later or contact support'
