@@ -19,6 +19,13 @@ class ScrapingantSiteNotReachableException(ScrapingantClientException):
         super().__init__(message)
 
 
+class ScrapingantDetectedException(ScrapingantClientException):
+    def __init__(self):
+        message = 'The anti-bot detection system has detected the request. ' \
+                  'Please, retry or change the request settings.'
+        super().__init__(message)
+
+
 class ScrapingantInternalException(ScrapingantClientException):
     def __init__(self):
         message = 'Something went wrong with the server side. Please try later or contact support'

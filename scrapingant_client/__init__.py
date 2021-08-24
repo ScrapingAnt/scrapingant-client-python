@@ -1,4 +1,4 @@
-__version__ = "0.3.4"
+__version__ = "0.3.5"
 
 from scrapingant_client.client import ScrapingAntClient
 from scrapingant_client.cookie import Cookie
@@ -8,6 +8,7 @@ from scrapingant_client.errors import (
     ScrapingantInvalidInputException,
     ScrapingantInternalException,
     ScrapingantSiteNotReachableException,
+    ScrapingantDetectedException,
 )
 from scrapingant_client.response import Response
 
@@ -19,5 +20,6 @@ __all__ = [
     'ScrapingantInvalidInputException',
     'ScrapingantInternalException',
     'ScrapingantSiteNotReachableException',
+    'ScrapingantDetectedException',
     'Response',
 ]
