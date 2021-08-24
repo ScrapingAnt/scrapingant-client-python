@@ -36,6 +36,8 @@ class ScrapingAntClient:
             js_snippet: Optional[str] = None,
             proxy_country: Optional[str] = None,
             return_text: bool = False,
+            wait_for_selector: Optional[str] = None,
+            browser: bool = True,
     ) -> Response:
         request_data = {'url': url}
         if cookies is not None:
@@ -45,8 +47,10 @@ class ScrapingAntClient:
             request_data['js_snippet'] = encoded_js_snippet
         if proxy_country is not None:
             request_data['proxy_country'] = proxy_country.lower()
-        if return_text:
-            request_data['return_text'] = True
+        if wait_for_selector is not None:
+            request_data['wait_for_selector'] = wait_for_selector
+        request_data['return_text'] = return_text
+        request_data['browser'] = browser
 
         response = self.requests_session.post(
             SCRAPINGANT_API_BASE_URL + '/general',

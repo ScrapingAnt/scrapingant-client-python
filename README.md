@@ -53,6 +53,8 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 | js_snippet | <code>string</code> | None |
 | proxy_country | <code>str</code> | None | 
 | return_text | <code>boolean</code> | False |
+| wait_for_selector | <code>str</code> | None |
+| browser | <code>boolean</code> | True |
 
 **IMPORTANT NOTE:** <code>js_snippet</code> will be encoded to Base64 automatically by the ScrapingAnt client library.
 
