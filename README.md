@@ -86,6 +86,7 @@ Class defining response from API.
 | ScrapingantInvalidInputException | Invalid value provided. Please, look into error message for more info |
 | ScrapingantInternalException | Something went wrong with the server side code. Try again later or contact ScrapingAnt support |
 | ScrapingantSiteNotReachableException | The requested URL is not reachable. Please, check it locally |
+| ScrapingantDetectedException | The anti-bot detection system has detected the request. Please, retry or change the request settings. |
 
 * * *
 

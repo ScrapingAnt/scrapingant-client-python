@@ -7,6 +7,7 @@ from scrapingant_client import (
     ScrapingantInvalidInputException,
     ScrapingantInternalException,
     ScrapingantSiteNotReachableException,
+    ScrapingantDetectedException,
 )
 from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 
@@ -47,3 +48,13 @@ def test_not_reachable():
     with pytest.raises(ScrapingantSiteNotReachableException) as e:
         client.general_request('example.com')
     assert 'The requested URL is not reachable (example.com)' in str(e)
+
+
+@responses.activate
+def test_detected():
+    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+                  json={}, status=423)
+    client = ScrapingAntClient(token='some_token')
+    with pytest.raises(ScrapingantDetectedException) as e:
+        client.general_request('example.com')
+    assert 'The anti-bot detection system has detected the request' in str(e)
