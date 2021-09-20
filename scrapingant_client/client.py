@@ -35,7 +35,7 @@ class ScrapingAntClient:
             url: str,
             cookies: Optional[List[Cookie]] = None,
             js_snippet: Optional[str] = None,
-            proxy_type: Optional[ProxyType] = None,
+            proxy_type: Optional[ProxyType] = ProxyType.datacenter,
             proxy_country: Optional[str] = None,
             return_text: bool = False,
             wait_for_selector: Optional[str] = None,
