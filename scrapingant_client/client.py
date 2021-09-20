@@ -14,6 +14,7 @@ from scrapingant_client.errors import (
     ScrapingantSiteNotReachableException,
     ScrapingantDetectedException,
 )
+from scrapingant_client.proxy_type import ProxyType
 from scrapingant_client.response import Response
 from scrapingant_client.utils import base64_encode_string
 
@@ -34,6 +35,7 @@ class ScrapingAntClient:
             url: str,
             cookies: Optional[List[Cookie]] = None,
             js_snippet: Optional[str] = None,
+            proxy_type: Optional[ProxyType] = None,
             proxy_country: Optional[str] = None,
             return_text: bool = False,
             wait_for_selector: Optional[str] = None,
@@ -45,6 +47,8 @@ class ScrapingAntClient:
         if js_snippet is not None:
             encoded_js_snippet = base64_encode_string(js_snippet)
             request_data['js_snippet'] = encoded_js_snippet
+        if proxy_type is not None:
+            request_data['proxy_type'] = proxy_type
         if proxy_country is not None:
             request_data['proxy_country'] = proxy_country.lower()
         if wait_for_selector is not None:
