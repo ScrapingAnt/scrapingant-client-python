@@ -51,6 +51,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 | url | <code>string</code> |  |
 | cookies | <code>List[Cookie]</code> | None |
 | js_snippet | <code>string</code> | None |
+| proxy_type | <code>ProxyType</code> | datacenter | 
 | proxy_country | <code>str</code> | None | 
 | return_text | <code>boolean</code> | False |
 | wait_for_selector | <code>str</code> | None |
@@ -61,7 +62,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 * * *
 
 #### Cookie
-Class defining cookie. Curently supports only name and value
+Class defining cookie. Currently it supports only name and value
 
 | Param | Type | 
 | --- | --- |
