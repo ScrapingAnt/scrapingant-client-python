@@ -134,6 +134,44 @@ result = client.general_request(
 print(result.content)
 ```
 
+### Exception handling and retries
+
+```python
+from scrapingant_client import ScrapingAntClient, ScrapingantClientException
+
+client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
+
+RETRIES_COUNT = 3
+
+def parse_html(html: str):
+    ...  # Implement your data extraction here
+
+parsed_data = None
+for retry_number in range(RETRIES_COUNT):
+    try:
+        scrapingant_response = client.general_request(
+            'https://example.com', 
+        )
+    except ScrapingantClientException as e:
+        print(f'Got ScrapingAnt exception {repr(e)}')
+    except Exception as e:
+        print(f'Got unexpected exception {repr(e)}')  # please report this kind of exceptions by creating a new issue
+    else:
+        try:
+            parsed_data = parse_html(scrapingant_response.content)
+            break  # Data is parsed successfully, so we dont need to retry
+        except Exception as e:
+            print(f'Got exception while parsing data {repr(e)}')
+    
+
+if parsed_data is None:
+    print(f'Failed to retrieve and parse data after {RETRIES_COUNT} tries')
+    # Can sleep and retry later, or stop the script execution, and research the reason 
+else:
+    print(f'Successfully parsed data: {parsed_data}')
+```
+
+
 ## Useful links
 - [Scrapingant API doumentation](https://docs.scrapingant.com)
 - [Scrapingant JS Client](https://github.com/scrapingant/scrapingant-client-js)
