@@ -1,6 +1,6 @@
 import platform
 import sys
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 import requests
 
@@ -14,6 +14,7 @@ from scrapingant_client.errors import (
     ScrapingantSiteNotReachableException,
     ScrapingantDetectedException,
 )
+from scrapingant_client.headers import convert_headers
 from scrapingant_client.proxy_type import ProxyType
 from scrapingant_client.response import Response
 from scrapingant_client.utils import base64_encode_string
@@ -34,6 +35,7 @@ class ScrapingAntClient:
             self,
             url: str,
             cookies: Optional[List[Cookie]] = None,
+            headers: Optional[Dict[str, str]] = None,
             js_snippet: Optional[str] = None,
             proxy_type: ProxyType = ProxyType.datacenter,
             proxy_country: Optional[str] = None,
@@ -58,6 +60,7 @@ class ScrapingAntClient:
         response = self.requests_session.post(
             SCRAPINGANT_API_BASE_URL + '/general',
             json=request_data,
+            headers=convert_headers(headers),
         )
         if response.status_code == 403:
             raise ScrapingantInvalidTokenException()

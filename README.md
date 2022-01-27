@@ -50,6 +50,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 | --- | --- | --- |
 | url | <code>string</code> |  |
 | cookies | <code>List[Cookie]</code> | None |
+| headers | <code>List[Dict[str, str]]</code> | None |
 | js_snippet | <code>string</code> | None |
 | proxy_type | <code>ProxyType</code> | datacenter | 
 | proxy_country | <code>str</code> | None | 
@@ -169,6 +170,29 @@ if parsed_data is None:
     # Can sleep and retry later, or stop the script execution, and research the reason 
 else:
     print(f'Successfully parsed data: {parsed_data}')
+```
+
+### Sending custom headers
+
+```python3
+from scrapingant_client import ScrapingAntClient
+
+client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
+
+result = client.general_request(
+    'https://httpbin.org/headers', 
+    headers={
+        'test-header': 'test-value'
+    }
+)
+print(result.content)
+
+# Http basic auth example
+result = client.general_request(
+    'https://jigsaw.w3.org/HTTP/Basic/', 
+    headers={'Authorization': 'Basic Z3Vlc3Q6Z3Vlc3Q='}
+)
+print(result.content)
 ```
 
 
