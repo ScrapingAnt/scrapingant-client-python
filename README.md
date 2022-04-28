@@ -138,7 +138,7 @@ print(result.content)
 ### Exception handling and retries
 
 ```python
-from scrapingant_client import ScrapingAntClient, ScrapingantClientException
+from scrapingant_client import ScrapingAntClient, ScrapingantClientException, ScrapingantInvalidInputException
 
 client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
@@ -153,6 +153,9 @@ for retry_number in range(RETRIES_COUNT):
         scrapingant_response = client.general_request(
             'https://example.com', 
         )
+    except ScrapingantInvalidInputException as e:
+        print(f'Got invalid input exception: {{repr(e)}}')
+        break  # We are not retrying if request params are not valid
     except ScrapingantClientException as e:
         print(f'Got ScrapingAnt exception {repr(e)}')
     except Exception as e:
