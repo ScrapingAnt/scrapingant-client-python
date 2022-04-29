@@ -75,8 +75,10 @@ class ScrapingAntClient:
         json_response = response.json()
         content = json_response['content']
         cookies_string = json_response['cookies']
+        status_code = json_response['status_code']
         cookies_list = cookies_list_from_string(cookies_string)
         return Response(
             content=content,
             cookies=cookies_list,
+            status_code=status_code
         )
