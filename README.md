@@ -79,6 +79,7 @@ Class defining response from API.
 | --- | --- |
 | content | <code>string</code> |
 | cookies | <code>List[Cookie]</code> |
+| status_code | <code>int</code> |
 
 ## Exceptions
 
