@@ -28,7 +28,7 @@ def test_invalid_input():
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantInvalidInputException) as e:
         client.general_request('bad_url')
-    assert '{"detail": "wrong url"}' in str(e)
+    assert 'wrong url' in str(e)
 
 
 @responses.activate

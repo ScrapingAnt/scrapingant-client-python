@@ -1,9 +1,10 @@
 # ScrapingAnt API client for Python
+
 [![PyPI version](https://badge.fury.io/py/scrapingant-client.svg)](https://badge.fury.io/py/scrapingant-client)
 
-`scrapingant-client` is the official library to access [ScrapingAnt API](https://docs.scrapingant.com) from your
-Python applications. It  provides useful features like parameters encoding to improve the ScrapingAnt usage experience. 
-Requires python 3.6+.
+`scrapingant-client` is the official library to access [ScrapingAnt API](https://docs.scrapingant.com) from your Python
+applications. It provides useful features like parameters encoding to improve the ScrapingAnt usage experience. Requires
+python 3.6+.
 
 <!-- toc -->
 
@@ -17,6 +18,7 @@ Requires python 3.6+.
 <!-- tocstop -->
 
 ## Quick Start
+
 ```python3
 from scrapingant_client import ScrapingAntClient
 
@@ -26,15 +28,29 @@ result = client.general_request('https://example.com')
 print(result.content)
 ```
 
+## Install
+
+```shell
+pip install scrapingant-client
+```
+
+If you need async support:
+
+```shell
+pip install scrapingant-client[async]
+```
+
 ## API token
+
 In order to get API token you'll need to register at [ScrapingAnt Service](https://app.scrapingant.com)
 
 ## API Reference
+
 All public classes, methods and their parameters can be inspected in this API reference.
 
 #### ScrapingAntClient(token)
 
-Main class of this library. 
+Main class of this library.
 
 | Param | Type  |
 | --- | --- |
@@ -42,7 +58,7 @@ Main class of this library.
 
 * * *
 
-#### ScrapingAntClient.general_request
+#### ScrapingAntClient.general_request and ScrapingAntClient.general_request_async
 
 https://docs.scrapingant.com/request-response-format#available-parameters
 
@@ -63,6 +79,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 * * *
 
 #### Cookie
+
 Class defining cookie. Currently it supports only name and value
 
 | Param | Type | 
@@ -73,7 +90,8 @@ Class defining cookie. Currently it supports only name and value
 * * *
 
 #### Response
-Class defining response from API. 
+
+Class defining response from API.
 
 | Param | Type |
 | --- | --- |
@@ -83,11 +101,11 @@ Class defining response from API.
 
 ## Exceptions
 
-`ScrapingantClientException` is base Exception class, used for all errors. 
+`ScrapingantClientException` is base Exception class, used for all errors.
 
 | Exception | Reason |
 | --- | --- |
-| ScrapingantInvalidTokenException | The API token is wrong or you have exceeded the API calls request limit 
+| ScrapingantInvalidTokenException | The API token is wrong or you have exceeded the API calls request limit
 | ScrapingantInvalidInputException | Invalid value provided. Please, look into error message for more info |
 | ScrapingantInternalException | Something went wrong with the server side code. Try again later or contact ScrapingAnt support |
 | ScrapingantSiteNotReachableException | The requested URL is not reachable. Please, check it locally |
@@ -106,7 +124,7 @@ from scrapingant_client import Cookie
 client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
 result = client.general_request(
-    'https://httpbin.org/cookies', 
+    'https://httpbin.org/cookies',
     cookies=[
         Cookie(name='cookieName1', value='cookieVal1'),
         Cookie(name='cookieName2', value='cookieVal2'),
@@ -122,6 +140,7 @@ response_cookies = result.cookies
 
 ```python
 from scrapingant_client import ScrapingAntClient
+
 client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
 customJsSnippet = """
@@ -130,7 +149,7 @@ var htmlElement = document.getElementsByTagName('html')[0];
 htmlElement.innerHTML = str;
 """
 result = client.general_request(
-    'https://example.com', 
+    'https://example.com',
     js_snippet=customJsSnippet,
 )
 print(result.content)
@@ -145,14 +164,16 @@ client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
 RETRIES_COUNT = 3
 
+
 def parse_html(html: str):
     ...  # Implement your data extraction here
+
 
 parsed_data = None
 for retry_number in range(RETRIES_COUNT):
     try:
         scrapingant_response = client.general_request(
-            'https://example.com', 
+            'https://example.com',
         )
     except ScrapingantInvalidInputException as e:
         print(f'Got invalid input exception: {{repr(e)}}')
@@ -167,7 +188,6 @@ for retry_number in range(RETRIES_COUNT):
             break  # Data is parsed successfully, so we dont need to retry
         except Exception as e:
             print(f'Got exception while parsing data {repr(e)}')
-    
 
 if parsed_data is None:
     print(f'Failed to retrieve and parse data after {RETRIES_COUNT} tries')
@@ -184,7 +204,7 @@ from scrapingant_client import ScrapingAntClient
 client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
 result = client.general_request(
-    'https://httpbin.org/headers', 
+    'https://httpbin.org/headers',
     headers={
         'test-header': 'test-value'
     }
@@ -193,13 +213,32 @@ print(result.content)
 
 # Http basic auth example
 result = client.general_request(
-    'https://jigsaw.w3.org/HTTP/Basic/', 
+    'https://jigsaw.w3.org/HTTP/Basic/',
     headers={'Authorization': 'Basic Z3Vlc3Q6Z3Vlc3Q='}
 )
 print(result.content)
 ```
 
+### Simple async example
+
+```python3
+import asyncio
+
+from scrapingant_client import ScrapingAntClient
+
+client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
+
+
+async def main():
+    # Scrape the example.com site.
+    result = await client.general_request_async('https://example.com')
+    print(result.content)
+
+
+asyncio.run(main())
+```
 
 ## Useful links
+
 - [Scrapingant API doumentation](https://docs.scrapingant.com)
 - [Scrapingant JS Client](https://github.com/scrapingant/scrapingant-client-js)

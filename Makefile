@@ -1,5 +1,5 @@
 init:
-	pip3 install -e .[dev]
+	pip3 install -e .[dev,async]
 
 test:
 	pytest -p no:cacheprovider
