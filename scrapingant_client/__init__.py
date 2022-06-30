@@ -1,4 +1,4 @@
-__version__ = "0.3.9"
+__version__ = "1.0.0"
 
 from scrapingant_client.client import ScrapingAntClient
 from scrapingant_client.cookie import Cookie
