@@ -5,7 +5,7 @@ from typing import List, Optional, Dict
 import requests
 
 import scrapingant_client
-from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
+from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL, TIMEOUT_SECONDS
 from scrapingant_client.cookie import Cookie, cookies_list_to_string, cookies_list_from_string
 from scrapingant_client.errors import (
     ScrapingantInvalidTokenException,
@@ -13,6 +13,7 @@ from scrapingant_client.errors import (
     ScrapingantInternalException,
     ScrapingantSiteNotReachableException,
     ScrapingantDetectedException,
+    ScrapingantTimeoutException,
 )
 from scrapingant_client.headers import convert_headers
 from scrapingant_client.proxy_type import ProxyType
@@ -100,11 +101,15 @@ class ScrapingAntClient:
             wait_for_selector=wait_for_selector,
             browser=browser,
         )
-        response = self.requests_session.post(
-            SCRAPINGANT_API_BASE_URL + '/general',
-            json=request_data,
-            headers=convert_headers(headers),
-        )
+        try:
+            response = self.requests_session.post(
+                SCRAPINGANT_API_BASE_URL + '/general',
+                json=request_data,
+                headers=convert_headers(headers),
+                timeout=TIMEOUT_SECONDS
+            )
+        except requests.exceptions.Timeout:
+            raise ScrapingantTimeoutException()
         response_status_code = response.status_code
         response_data = response.json()
         parsed_response: Response = self._parse_response(response_status_code, response_data, url)
@@ -138,13 +143,18 @@ class ScrapingAntClient:
                 headers={
                     'x-api-key': self.token,
                     'User-Agent': self.user_agent,
-                }
+                },
+                timeout=TIMEOUT_SECONDS,
         ) as client:
-            response = await client.post(
-                SCRAPINGANT_API_BASE_URL + '/general',
-                json=request_data,
-                headers=convert_headers(headers),
-            )
+            try:
+                response = await client.post(
+                    SCRAPINGANT_API_BASE_URL + '/general',
+                    json=request_data,
+                    headers=convert_headers(headers),
+                )
+            except httpx.TimeoutException:
+                raise ScrapingantTimeoutException()
+
         response_status_code = response.status_code
         response_data = response.json()
         parsed_response: Response = self._parse_response(response_status_code, response_data, url)

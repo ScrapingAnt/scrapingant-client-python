@@ -30,3 +30,10 @@ class ScrapingantInternalException(ScrapingantClientException):
     def __init__(self):
         message = 'Something went wrong with the server side. Please try later or contact support'
         super().__init__(message)
+
+
+class ScrapingantTimeoutException(ScrapingantClientException):
+    def __init__(self):
+        message = 'Got timeout while communicating with Scrapingant servers.' \
+                  ' Check your network connection. Please try later or contact support'
+        super().__init__(message)

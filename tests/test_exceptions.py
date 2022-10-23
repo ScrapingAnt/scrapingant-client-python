@@ -1,4 +1,5 @@
 import pytest
+import requests
 import responses
 
 from scrapingant_client import (
@@ -8,6 +9,7 @@ from scrapingant_client import (
     ScrapingantInternalException,
     ScrapingantSiteNotReachableException,
     ScrapingantDetectedException,
+    ScrapingantTimeoutException,
 )
 from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 
@@ -58,3 +60,13 @@ def test_detected():
     with pytest.raises(ScrapingantDetectedException) as e:
         client.general_request('example.com')
     assert 'The anti-bot detection system has detected the request' in str(e)
+
+
+@responses.activate
+def test_timeout():
+    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+                  body=requests.exceptions.ReadTimeout())
+    client = ScrapingAntClient(token='some_token')
+    with pytest.raises(ScrapingantTimeoutException) as e:
+        client.general_request('example.com')
+    assert 'Got timeout' in str(e)
