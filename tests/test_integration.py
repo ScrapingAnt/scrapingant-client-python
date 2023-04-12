@@ -12,11 +12,20 @@ from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 def test_integration():
     client = ScrapingAntClient(token='test_token')
     responses.add(
-        responses.POST,
-        url=SCRAPINGANT_API_BASE_URL + '/general',
+        responses.GET,
+        url=SCRAPINGANT_API_BASE_URL +
+        '/extended'
+        '?url=http%3A%2F%2Fexample.com'
+        '&cookies=test_name%3Dtest_value'
+        '&js_snippet=dGVzdF9qc19zdHJpbmc%3D'
+        '&proxy_type=datacenter'
+        '&proxy_country=test_country'
+        '&wait_for_selector=test_selector'
+        '&browser=True',
         json={
-            "content": "test_content",
+            "html": "test_content",
             "cookies": "test_key1=test_value1;test_key2=test_value2",
+            "text": "test_text",
             "status_code": 200,
         },
         status=200,
@@ -24,33 +33,22 @@ def test_integration():
     response = client.general_request(
         url='http://example.com',
         cookies=[Cookie('test_name', 'test_value')],
-        headers={'testheader': 'test_header_value'},
+        headers={
+            'testheader': 'test_header_value'},
         js_snippet='test_js_string',
         proxy_type=ProxyType.datacenter,
         proxy_country='test_country',
-        return_text=True,
         wait_for_selector='test_selector',
         browser=True,
     )
     expected = {
         'content': 'test_content',
         'cookies': [Cookie('test_key1', 'test_value1'), Cookie('test_key2', 'test_value2')],
-        'status_code': 200
+        "text": "test_text",
+        'status_code': 200,
     }
     assert response.__dict__ == expected
     assert len(responses.calls) == 1
-
-    expected_body = {
-        'browser': True,
-        'cookies': 'test_name=test_value',
-        'js_snippet': 'dGVzdF9qc19zdHJpbmc=',
-        'proxy_country': 'test_country',
-        'proxy_type': 'datacenter',
-        'return_text': True,
-        'url': 'http://example.com',
-        'wait_for_selector': 'test_selector',
-    }
-    assert json.loads(responses.calls[0].request.body) == expected_body
 
     headers = responses.calls[0].request.headers
     assert headers['ant-testheader'] == 'test_header_value'
@@ -61,11 +59,20 @@ def test_integration():
 async def test_integration_async(httpx_mock: HTTPXMock):
     client = ScrapingAntClient(token='test_token')
     httpx_mock.add_response(
-        method="POST",
-        url=SCRAPINGANT_API_BASE_URL + '/general',
+        method="GET",
+        url=SCRAPINGANT_API_BASE_URL +
+        '/extended'
+        '?url=http%3A%2F%2Fexample.com'
+        '&cookies=test_name%3Dtest_value'
+        '&js_snippet=dGVzdF9qc19zdHJpbmc%3D'
+        '&proxy_type=datacenter'
+        '&proxy_country=test_country'
+        '&wait_for_selector=test_selector'
+        '&browser=true',
         json={
-            "content": "test_content",
+            "html": "test_content",
             "cookies": "test_key1=test_value1;test_key2=test_value2",
+            "text": "test_text",
             "status_code": 200,
         },
         status_code=200,
@@ -73,34 +80,58 @@ async def test_integration_async(httpx_mock: HTTPXMock):
     response = await client.general_request_async(
         url='http://example.com',
         cookies=[Cookie('test_name', 'test_value')],
-        headers={'testheader': 'test_header_value'},
+        headers={
+            'testheader': 'test_header_value'},
         js_snippet='test_js_string',
         proxy_type=ProxyType.datacenter,
         proxy_country='test_country',
-        return_text=True,
         wait_for_selector='test_selector',
         browser=True,
     )
     expected = {
         'content': 'test_content',
         'cookies': [Cookie('test_key1', 'test_value1'), Cookie('test_key2', 'test_value2')],
-        'status_code': 200
+        "text": "test_text",
+        'status_code': 200,
     }
     assert response.__dict__ == expected
     assert len(httpx_mock.get_requests()) == 1
 
-    expected_body = {
-        'browser': True,
-        'cookies': 'test_name=test_value',
-        'js_snippet': 'dGVzdF9qc19zdHJpbmc=',
-        'proxy_country': 'test_country',
-        'proxy_type': 'datacenter',
-        'return_text': True,
-        'url': 'http://example.com',
-        'wait_for_selector': 'test_selector',
-    }
-    assert json.loads(httpx_mock.get_requests()[0].content) == expected_body
-
     headers = httpx_mock.get_requests()[0].headers
     assert headers['ant-testheader'] == 'test_header_value'
+    assert headers['x-api-key'] == 'test_token'
+
+
+@responses.activate
+def test_post():
+    client = ScrapingAntClient(token='test_token')
+    responses.add(
+        responses.POST,
+        url=SCRAPINGANT_API_BASE_URL + '/extended',
+        json={
+            "html": "test_content",
+            "cookies": "",
+            "text": "test_text",
+            "status_code": 200,
+        },
+        status=200,
+    )
+    client.general_request(
+        url='http://example.com',
+        method='POST',
+        json={
+            'test_key': 'test_value'},
+    )
+
+    assert len(responses.calls) == 1
+    assert responses.calls[0].request.method == 'POST'
+    assert json.loads(responses.calls[0].request.body) == {
+        'test_key': 'test_value'}
+    assert responses.calls[0].request.params == {
+        'browser': 'True',
+        'proxy_type': 'datacenter',
+        'url': 'http://example.com',
+    }
+
+    headers = responses.calls[0].request.headers
     assert headers['x-api-key'] == 'test_token'

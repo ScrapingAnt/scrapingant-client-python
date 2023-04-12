@@ -39,7 +39,6 @@ class ScrapingAntClient:
             js_snippet: Optional[str] = None,
             proxy_type: ProxyType = ProxyType.datacenter,
             proxy_country: Optional[str] = None,
-            return_text: bool = False,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
     ) -> Dict:
@@ -54,7 +53,6 @@ class ScrapingAntClient:
             request_data['proxy_country'] = proxy_country.lower()
         if wait_for_selector is not None:
             request_data['wait_for_selector'] = wait_for_selector
-        request_data['return_text'] = return_text
         request_data['browser'] = browser
         return request_data
 
@@ -69,27 +67,31 @@ class ScrapingAntClient:
             raise ScrapingantDetectedException()
         elif response_status_code == 500:
             raise ScrapingantInternalException()
-        content = response_data['content']
+        content = response_data['html']
         cookies_string = response_data['cookies']
+        text = response_data['text']
         status_code = response_data['status_code']
         cookies_list = cookies_list_from_string(cookies_string)
         return Response(
             content=content,
             cookies=cookies_list,
+            text=text,
             status_code=status_code
         )
 
     def general_request(
             self,
             url: str,
+            method: str = 'GET',
             cookies: Optional[List[Cookie]] = None,
             headers: Optional[Dict[str, str]] = None,
             js_snippet: Optional[str] = None,
             proxy_type: ProxyType = ProxyType.datacenter,
             proxy_country: Optional[str] = None,
-            return_text: bool = False,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
+            data=None,
+            json=None,
     ) -> Response:
         request_data = self._form_payload(
             url=url,
@@ -97,16 +99,17 @@ class ScrapingAntClient:
             js_snippet=js_snippet,
             proxy_type=proxy_type,
             proxy_country=proxy_country,
-            return_text=return_text,
             wait_for_selector=wait_for_selector,
             browser=browser,
         )
         try:
-            response = self.requests_session.post(
-                SCRAPINGANT_API_BASE_URL + '/general',
-                json=request_data,
+            response = self.requests_session.request(
+                method=method,
+                url=SCRAPINGANT_API_BASE_URL + '/extended',
+                params=request_data,
                 headers=convert_headers(headers),
-                timeout=TIMEOUT_SECONDS
+                data=data,
+                json=json,
             )
         except requests.exceptions.Timeout:
             raise ScrapingantTimeoutException()
@@ -118,14 +121,16 @@ class ScrapingAntClient:
     async def general_request_async(
             self,
             url: str,
+            method: str = 'GET',
             cookies: Optional[List[Cookie]] = None,
             headers: Optional[Dict[str, str]] = None,
             js_snippet: Optional[str] = None,
             proxy_type: ProxyType = ProxyType.datacenter,
             proxy_country: Optional[str] = None,
-            return_text: bool = False,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
+            data=None,
+            json=None,
     ) -> Response:
         import httpx
 
@@ -135,7 +140,6 @@ class ScrapingAntClient:
             js_snippet=js_snippet,
             proxy_type=proxy_type,
             proxy_country=proxy_country,
-            return_text=return_text,
             wait_for_selector=wait_for_selector,
             browser=browser,
         )
@@ -147,14 +151,16 @@ class ScrapingAntClient:
                 timeout=TIMEOUT_SECONDS,
         ) as client:
             try:
-                response = await client.post(
-                    SCRAPINGANT_API_BASE_URL + '/general',
-                    json=request_data,
+                response = await client.request(
+                    method=method,
+                    url=SCRAPINGANT_API_BASE_URL + '/extended',
+                    params=request_data,
                     headers=convert_headers(headers),
+                    data=data,
+                    json=json,
                 )
             except httpx.TimeoutException:
                 raise ScrapingantTimeoutException()
-
         response_status_code = response.status_code
         response_data = response.json()
         parsed_response: Response = self._parse_response(response_status_code, response_data, url)

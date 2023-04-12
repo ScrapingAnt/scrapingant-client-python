@@ -16,7 +16,7 @@ from scrapingant_client.constants import SCRAPINGANT_API_BASE_URL
 
 @responses.activate
 def test_invalid_token():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   json={'detail': 'wrong token'}, status=403)
     client = ScrapingAntClient(token='invalid_token')
     with pytest.raises(ScrapingantInvalidTokenException):
@@ -25,7 +25,7 @@ def test_invalid_token():
 
 @responses.activate
 def test_invalid_input():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   json={'detail': 'wrong url'}, status=422)
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantInvalidInputException) as e:
@@ -35,7 +35,7 @@ def test_invalid_input():
 
 @responses.activate
 def test_internal_server_error():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   json={}, status=500)
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantInternalException):
@@ -44,7 +44,7 @@ def test_internal_server_error():
 
 @responses.activate
 def test_not_reachable():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   json={}, status=404)
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantSiteNotReachableException) as e:
@@ -54,7 +54,7 @@ def test_not_reachable():
 
 @responses.activate
 def test_detected():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   json={}, status=423)
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantDetectedException) as e:
