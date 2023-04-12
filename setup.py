@@ -34,7 +34,7 @@ setuptools.setup(
         "License :: OSI Approved :: Apache Software License",
     ],
     keywords="scrapingant api scraper scraping",
-    python_requires='~=3.5',
+    python_requires='~=3.7',
     install_requires=['requests>=2,<3'],
     extras_require={
         'dev': [

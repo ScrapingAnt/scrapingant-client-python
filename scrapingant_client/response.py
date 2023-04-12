@@ -4,7 +4,8 @@ from scrapingant_client.cookie import Cookie
 
 
 class Response:
-    def __init__(self, content: str, cookies: List[Cookie], status_code: Optional[int]):
+    def __init__(self, content: str, cookies: List[Cookie], text: str, status_code: Optional[int]):
         self.content = content
         self.cookies = cookies
+        self.text = text
         self.status_code = status_code

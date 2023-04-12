@@ -23,7 +23,7 @@ python 3.6+.
 from scrapingant_client import ScrapingAntClient
 
 client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
-# Scrape the example.com site.
+# Scrape the example.com site
 result = client.general_request('https://example.com')
 print(result.content)
 ```
@@ -62,17 +62,19 @@ Main class of this library.
 
 https://docs.scrapingant.com/request-response-format#available-parameters
 
-| Param             | Type                              | Default    |
-|-------------------|-----------------------------------|------------|
-| url               | <code>string</code>               |            |
-| cookies           | <code>List[Cookie]</code>         | None       |
-| headers           | <code>List[Dict[str, str]]</code> | None       |
-| js_snippet        | <code>string</code>               | None       |
-| proxy_type        | <code>ProxyType</code>            | datacenter | 
-| proxy_country     | <code>str</code>                  | None       | 
-| return_text       | <code>boolean</code>              | False      |
-| wait_for_selector | <code>str</code>                  | None       |
-| browser           | <code>boolean</code>              | True       |
+| Param             | Type                                                                                                                       | Default    |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------|------------|
+| url               | <code>string</code>                                                                                                        |            |
+| method            | <code>string</code>                                                                                                        | GET        |
+| cookies           | <code>List[Cookie]</code>                                                                                                  | None       |
+| headers           | <code>List[Dict[str, str]]</code>                                                                                          | None       |
+| js_snippet        | <code>string</code>                                                                                                        | None       |
+| proxy_type        | <code>ProxyType</code>                                                                                                     | datacenter | 
+| proxy_country     | <code>str</code>                                                                                                           | None       | 
+| wait_for_selector | <code>str</code>                                                                                                           | None       |
+| browser           | <code>boolean</code>                                                                                                       | True       |
+| data              | same as [requests param 'data'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
+| json              | same as [requests param 'json'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
 
 **IMPORTANT NOTE:** <code>js_snippet</code> will be encoded to Base64 automatically by the ScrapingAnt client library.
 
@@ -82,7 +84,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 
 Class defining cookie. Currently it supports only name and value
 
-| Param | Type                | 
+| Param |  Type               | 
 |-------|---------------------|
 | name  | <code>string</code> | 
 | value | <code>string</code> |
@@ -92,12 +94,12 @@ Class defining cookie. Currently it supports only name and value
 #### Response
 
 Class defining response from API.
-
-| Param       | Type                      |
-|-------------|---------------------------|
-| content     | <code>string</code>       |
-| cookies     | <code>List[Cookie]</code> |
-| status_code | <code>int</code>          |
+| Param       | Type                       |
+|-------------|----------------------------|
+| content     | <code>string</code>        |
+| cookies     | <code>List[Cookie]</code>  |
+| status_code | <code>int</code>           |
+| text        | <code>string</code>        |
 
 ## Exceptions
 
@@ -231,12 +233,36 @@ client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
 
 
 async def main():
-    # Scrape the example.com site.
+    # Scrape the example.com site
     result = await client.general_request_async('https://example.com')
     print(result.content)
 
 
 asyncio.run(main())
+```
+
+### Sending POST request
+
+```python3
+from scrapingant_client import ScrapingAntClient
+
+client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
+
+# Sending POST request with json data
+result = client.general_request(
+    url="https://httpbin.org/post",
+    method="POST",
+    json={"test": "test"},
+)
+print(result.content)
+
+# Sending POST request with bytes data
+result = client.general_request(
+    url="https://httpbin.org/post",
+    method="POST",
+    data=b'test_bytes',
+)
+print(result.content)
 ```
 
 ## Useful links
