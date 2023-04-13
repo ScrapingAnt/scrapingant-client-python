@@ -64,7 +64,7 @@ def test_detected():
 
 @responses.activate
 def test_timeout():
-    responses.add(responses.POST, SCRAPINGANT_API_BASE_URL + '/general',
+    responses.add(responses.GET, SCRAPINGANT_API_BASE_URL + '/extended',
                   body=requests.exceptions.ReadTimeout())
     client = ScrapingAntClient(token='some_token')
     with pytest.raises(ScrapingantTimeoutException) as e:
