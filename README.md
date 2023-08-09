@@ -62,19 +62,20 @@ Main class of this library.
 
 https://docs.scrapingant.com/request-response-format#available-parameters
 
-| Param             | Type                                                                                                                       | Default    |
-|-------------------|----------------------------------------------------------------------------------------------------------------------------|------------|
-| url               | <code>string</code>                                                                                                        |            |
-| method            | <code>string</code>                                                                                                        | GET        |
-| cookies           | <code>List[Cookie]</code>                                                                                                  | None       |
-| headers           | <code>List[Dict[str, str]]</code>                                                                                          | None       |
-| js_snippet        | <code>string</code>                                                                                                        | None       |
-| proxy_type        | <code>ProxyType</code>                                                                                                     | datacenter | 
-| proxy_country     | <code>str</code>                                                                                                           | None       | 
-| wait_for_selector | <code>str</code>                                                                                                           | None       |
-| browser           | <code>boolean</code>                                                                                                       | True       |
-| data              | same as [requests param 'data'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
-| json              | same as [requests param 'json'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
+| Param               | Type                                                                                                                       | Default    |
+|---------------------|----------------------------------------------------------------------------------------------------------------------------|------------|
+| url                 | <code>string</code>                                                                                                        |            |
+| method              | <code>string</code>                                                                                                        | GET        |
+| cookies             | <code>List[Cookie]</code>                                                                                                  | None       |
+| headers             | <code>List[Dict[str, str]]</code>                                                                                          | None       |
+| js_snippet          | <code>string</code>                                                                                                        | None       |
+| proxy_type          | <code>ProxyType</code>                                                                                                     | datacenter | 
+| proxy_country       | <code>str</code>                                                                                                           | None       | 
+| wait_for_selector   | <code>str</code>                                                                                                           | None       |
+| browser             | <code>boolean</code>                                                                                                       | True       |
+| return_page_source  | <code>boolean</code>                                                                                                       | False      |
+| data                | same as [requests param 'data'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
+| json                | same as [requests param 'json'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
 
 **IMPORTANT NOTE:** <code>js_snippet</code> will be encoded to Base64 automatically by the ScrapingAnt client library.
 

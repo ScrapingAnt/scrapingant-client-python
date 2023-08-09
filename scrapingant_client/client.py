@@ -41,6 +41,7 @@ class ScrapingAntClient:
             proxy_country: Optional[str] = None,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
+            return_page_source: Optional[bool] = None,
     ) -> Dict:
         request_data = {'url': url}
         if cookies is not None:
@@ -54,6 +55,9 @@ class ScrapingAntClient:
         if wait_for_selector is not None:
             request_data['wait_for_selector'] = wait_for_selector
         request_data['browser'] = browser
+        if return_page_source:
+            assert browser, 'return_page_source can only be used with browser=True'
+            request_data['return_page_source'] = return_page_source
         return request_data
 
     def _parse_response(self, response_status_code: int, response_data: Dict, url: str) -> Response:
@@ -90,6 +94,7 @@ class ScrapingAntClient:
             proxy_country: Optional[str] = None,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
+            return_page_source: Optional[bool] = None,
             data=None,
             json=None,
     ) -> Response:
@@ -101,6 +106,7 @@ class ScrapingAntClient:
             proxy_country=proxy_country,
             wait_for_selector=wait_for_selector,
             browser=browser,
+            return_page_source=return_page_source,
         )
         try:
             response = self.requests_session.request(
@@ -129,6 +135,7 @@ class ScrapingAntClient:
             proxy_country: Optional[str] = None,
             wait_for_selector: Optional[str] = None,
             browser: bool = True,
+            return_page_source: Optional[bool] = None,
             data=None,
             json=None,
     ) -> Response:
@@ -142,6 +149,7 @@ class ScrapingAntClient:
             proxy_country=proxy_country,
             wait_for_selector=wait_for_selector,
             browser=browser,
+            return_page_source=return_page_source,
         )
         async with httpx.AsyncClient(
                 headers={
