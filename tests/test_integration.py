@@ -21,7 +21,8 @@ def test_integration():
         '&proxy_type=datacenter'
         '&proxy_country=test_country'
         '&wait_for_selector=test_selector'
-        '&browser=True',
+        '&browser=True'
+        '&return_page_source=True',
         json={
             "html": "test_content",
             "cookies": "test_key1=test_value1;test_key2=test_value2",
@@ -40,6 +41,7 @@ def test_integration():
         proxy_country='test_country',
         wait_for_selector='test_selector',
         browser=True,
+        return_page_source=True,
     )
     expected = {
         'content': 'test_content',
@@ -68,7 +70,8 @@ async def test_integration_async(httpx_mock: HTTPXMock):
         '&proxy_type=datacenter'
         '&proxy_country=test_country'
         '&wait_for_selector=test_selector'
-        '&browser=true',
+        '&browser=true'
+        '&return_page_source=true',
         json={
             "html": "test_content",
             "cookies": "test_key1=test_value1;test_key2=test_value2",
@@ -87,6 +90,7 @@ async def test_integration_async(httpx_mock: HTTPXMock):
         proxy_country='test_country',
         wait_for_selector='test_selector',
         browser=True,
+        return_page_source=True,
     )
     expected = {
         'content': 'test_content',
