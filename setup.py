@@ -39,7 +39,7 @@ setuptools.setup(
     extras_require={
         'dev': [
             'pytest>=7,<8',
-            'flake8>=4,<5',
+            'flake8>=7,<8',
             'responses>=0,<1',
             'pytest-httpx>=0,<1',
             'pytest-asyncio>=0,<1',
