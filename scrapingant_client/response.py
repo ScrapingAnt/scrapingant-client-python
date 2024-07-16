@@ -9,3 +9,9 @@ class Response:
         self.cookies = cookies
         self.text = text
         self.status_code = status_code
+
+
+class MarkdownResponse:
+    def __init__(self, url: str, markdown: str):
+        self.url = url
+        self.markdown = markdown
