@@ -17,7 +17,7 @@ from scrapingant_client.errors import (
 )
 from scrapingant_client.headers import convert_headers
 from scrapingant_client.proxy_type import ProxyType
-from scrapingant_client.response import Response
+from scrapingant_client.response import Response, MarkdownResponse
 from scrapingant_client.utils import base64_encode_string
 
 
@@ -43,7 +43,8 @@ class ScrapingAntClient:
             browser: bool = True,
             return_page_source: Optional[bool] = None,
     ) -> Dict:
-        request_data = {'url': url}
+        request_data = {
+            'url': url}
         if cookies is not None:
             request_data['cookies'] = cookies_list_to_string(cookies)
         if js_snippet is not None:
@@ -60,7 +61,7 @@ class ScrapingAntClient:
             request_data['return_page_source'] = return_page_source
         return request_data
 
-    def _parse_response(self, response_status_code: int, response_data: Dict, url: str, endpoint: str) -> Response:
+    def _check_status_code(self, response_status_code: int, response_data: Dict, url: str) -> None:
         if response_status_code == 403:
             raise ScrapingantInvalidTokenException()
         elif response_status_code == 404:
@@ -71,25 +72,25 @@ class ScrapingAntClient:
             raise ScrapingantDetectedException()
         elif response_status_code == 500:
             raise ScrapingantInternalException()
-        if endpoint is None or endpoint == 'extended':
-            content = response_data['html']
-            cookies_string = response_data['cookies']
-            text = response_data['text']
-            status_code = response_data['status_code']
-            cookies_list = cookies_list_from_string(cookies_string)
-            return Response(
-                content=content,
-                cookies=cookies_list,
-                text=text,
-                status_code=status_code
-            )
-        elif endpoint == 'markdown':
-            return Response(
-                content='',
-                cookies=[],
-                text=response_data['markdown'],
-                status_code=0,
-            )
+
+    def _parse_extended_response(self, response_data: Dict) -> Response:
+        content = response_data['html']
+        cookies_string = response_data['cookies']
+        text = response_data['text']
+        status_code = response_data['status_code']
+        cookies_list = cookies_list_from_string(cookies_string)
+        return Response(
+            content=content,
+            cookies=cookies_list,
+            text=text,
+            status_code=status_code,
+        )
+
+    def _parse_markdown_response(self, response_data: Dict) -> MarkdownResponse:
+        return MarkdownResponse(
+            url=response_data['url'],
+            markdown=response_data['markdown'],
+        )
 
     def _get_scrapingant_api_url(self, endpoint: Optional[str] = None) -> str:
         if endpoint is None or endpoint == 'extended':
@@ -99,7 +100,7 @@ class ScrapingAntClient:
         else:
             raise ValueError(f'Invalid endpoint: {endpoint}, must be either None or "markdown"')
 
-    def general_request(
+    def _request(
             self,
             url: str,
             method: str = 'GET',
@@ -114,7 +115,7 @@ class ScrapingAntClient:
             data=None,
             json=None,
             endpoint: Optional[str] = None,
-    ) -> Response:
+    ) -> Dict:
         request_data = self._form_payload(
             url=url,
             cookies=cookies,
@@ -138,10 +139,10 @@ class ScrapingAntClient:
             raise ScrapingantTimeoutException()
         response_status_code = response.status_code
         response_data = response.json()
-        parsed_response: Response = self._parse_response(response_status_code, response_data, url, endpoint)
-        return parsed_response
+        self._check_status_code(response_status_code, response_data, url)
+        return response_data
 
-    async def general_request_async(
+    async def _request_async(
             self,
             url: str,
             method: str = 'GET',
@@ -156,7 +157,7 @@ class ScrapingAntClient:
             data=None,
             json=None,
             endpoint: Optional[str] = None,
-    ) -> Response:
+    ) -> Dict:
         import httpx
 
         request_data = self._form_payload(
@@ -189,5 +190,21 @@ class ScrapingAntClient:
                 raise ScrapingantTimeoutException()
         response_status_code = response.status_code
         response_data = response.json()
-        parsed_response: Response = self._parse_response(response_status_code, response_data, url, endpoint)
-        return parsed_response
+        self._check_status_code(response_status_code, response_data, url)
+        return response_data
+
+    def general_request(self, *args, **kwargs) -> Response:
+        response_data = self._request(*args, **kwargs, endpoint='extended')
+        return self._parse_extended_response(response_data)
+
+    async def general_request_async(self, *args, **kwargs) -> Response:
+        response_data = await self._request_async(*args, **kwargs, endpoint='extended')
+        return self._parse_extended_response(response_data)
+
+    def markdown_request(self, *args, **kwargs) -> MarkdownResponse:
+        response_data = self._request(*args, **kwargs, endpoint='markdown')
+        return self._parse_markdown_response(response_data)
+
+    async def markdown_request_async(self, *args, **kwargs) -> MarkdownResponse:
+        response_data = await self._request_async(*args, **kwargs, endpoint='markdown')
+        return self._parse_markdown_response(response_data)
