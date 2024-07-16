@@ -59,7 +59,6 @@ Main class of this library.
 * * *
 
 #### Common arguments
-For:
  - ScrapingAntClient.general_request
  - ScrapingAntClient.general_request_async
  - ScrapingAntClient.markdown_request

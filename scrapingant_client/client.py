@@ -43,8 +43,7 @@ class ScrapingAntClient:
             browser: bool = True,
             return_page_source: Optional[bool] = None,
     ) -> Dict:
-        request_data = {
-            'url': url}
+        request_data = {'url': url}
         if cookies is not None:
             request_data['cookies'] = cookies_list_to_string(cookies)
         if js_snippet is not None:
