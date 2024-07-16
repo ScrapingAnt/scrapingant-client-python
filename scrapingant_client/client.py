@@ -60,7 +60,7 @@ class ScrapingAntClient:
             request_data['return_page_source'] = return_page_source
         return request_data
 
-    def _parse_response(self, response_status_code: int, response_data: Dict, url: str) -> Response:
+    def _parse_response(self, response_status_code: int, response_data: Dict, url: str, endpoint: str) -> Response:
         if response_status_code == 403:
             raise ScrapingantInvalidTokenException()
         elif response_status_code == 404:
@@ -71,17 +71,33 @@ class ScrapingAntClient:
             raise ScrapingantDetectedException()
         elif response_status_code == 500:
             raise ScrapingantInternalException()
-        content = response_data['html']
-        cookies_string = response_data['cookies']
-        text = response_data['text']
-        status_code = response_data['status_code']
-        cookies_list = cookies_list_from_string(cookies_string)
-        return Response(
-            content=content,
-            cookies=cookies_list,
-            text=text,
-            status_code=status_code
-        )
+        if endpoint is None or endpoint == 'extended':
+            content = response_data['html']
+            cookies_string = response_data['cookies']
+            text = response_data['text']
+            status_code = response_data['status_code']
+            cookies_list = cookies_list_from_string(cookies_string)
+            return Response(
+                content=content,
+                cookies=cookies_list,
+                text=text,
+                status_code=status_code
+            )
+        elif endpoint == 'markdown':
+            return Response(
+                content='',
+                cookies=[],
+                text=response_data['markdown'],
+                status_code=0,
+            )
+
+    def _get_scrapingant_api_url(self, endpoint: Optional[str] = None) -> str:
+        if endpoint is None or endpoint == 'extended':
+            return SCRAPINGANT_API_BASE_URL + '/extended'
+        elif endpoint == 'markdown':
+            return SCRAPINGANT_API_BASE_URL + '/markdown'
+        else:
+            raise ValueError(f'Invalid endpoint: {endpoint}, must be either None or "markdown"')
 
     def general_request(
             self,
@@ -97,6 +113,7 @@ class ScrapingAntClient:
             return_page_source: Optional[bool] = None,
             data=None,
             json=None,
+            endpoint: Optional[str] = None,
     ) -> Response:
         request_data = self._form_payload(
             url=url,
@@ -111,7 +128,7 @@ class ScrapingAntClient:
         try:
             response = self.requests_session.request(
                 method=method,
-                url=SCRAPINGANT_API_BASE_URL + '/extended',
+                url=self._get_scrapingant_api_url(endpoint),
                 params=request_data,
                 headers=convert_headers(headers),
                 data=data,
@@ -121,7 +138,7 @@ class ScrapingAntClient:
             raise ScrapingantTimeoutException()
         response_status_code = response.status_code
         response_data = response.json()
-        parsed_response: Response = self._parse_response(response_status_code, response_data, url)
+        parsed_response: Response = self._parse_response(response_status_code, response_data, url, endpoint)
         return parsed_response
 
     async def general_request_async(
@@ -138,6 +155,7 @@ class ScrapingAntClient:
             return_page_source: Optional[bool] = None,
             data=None,
             json=None,
+            endpoint: Optional[str] = None,
     ) -> Response:
         import httpx
 
@@ -161,7 +179,7 @@ class ScrapingAntClient:
             try:
                 response = await client.request(
                     method=method,
-                    url=SCRAPINGANT_API_BASE_URL + '/extended',
+                    url=self._get_scrapingant_api_url(endpoint),
                     params=request_data,
                     headers=convert_headers(headers),
                     data=data,
@@ -171,5 +189,5 @@ class ScrapingAntClient:
                 raise ScrapingantTimeoutException()
         response_status_code = response.status_code
         response_data = response.json()
-        parsed_response: Response = self._parse_response(response_status_code, response_data, url)
+        parsed_response: Response = self._parse_response(response_status_code, response_data, url, endpoint)
         return parsed_response

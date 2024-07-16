@@ -76,6 +76,7 @@ https://docs.scrapingant.com/request-response-format#available-parameters
 | return_page_source  | <code>boolean</code>                                                                                                       | False      |
 | data                | same as [requests param 'data'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
 | json                | same as [requests param 'json'](https://requests.readthedocs.io/en/latest/user/quickstart/#more-complicated-post-requests) | None       |
+| endpoint            | None or 'markdown'                                                                                                         | None       |
 
 **IMPORTANT NOTE:** <code>js_snippet</code> will be encoded to Base64 automatically by the ScrapingAnt client library.
 
@@ -264,6 +265,21 @@ result = client.general_request(
     data=b'test_bytes',
 )
 print(result.content)
+```
+
+### Receiving markdown
+
+```python3
+from scrapingant_client import ScrapingAntClient
+
+client = ScrapingAntClient(token='<YOUR-SCRAPINGANT-API-TOKEN>')
+
+# Sending POST request with json data
+result = client.general_request(
+    url="https://example.com",
+    endpoint='markdown',
+)
+print(result.text) 
 ```
 
 ## Useful links
